@@ -89,14 +89,14 @@ def send_email(calendar, req):
     message_request = Mail(
         from_email=MY_EMAIL,
         to_emails=MY_EMAIL,
-        subject=f"Appointment request from {given_name}",
-        html_content=f'Hey, Lena!<br> {given_name} just sent an appointment request for {start_date}. <br>Please send an email of confirmation to {email}')
+        subject="Appointment request from " + MY_NAME,
+        html_content="Hey, Lena!<br> " + given_name + " just sent an appointment request for " + start_date + ". <br>Please send an email of confirmation to " + email)
 
     message_confirmation = Mail(
         from_email=MY_EMAIL,
         to_emails=email,
-        subject=f"Appointment confirmation with {MY_NAME}",
-        html_content=f'Hey, {given_name}! <br> {MY_NAME} just received your appointment request for {start_date} and will contact you soon. <br> Meanwhile, please add the event to your calendar.')
+        subject="Appointment confirmation with " + MY_NAME,
+        html_content="Hey, " + given_name + "! <br> " + MY_NAME + " just received your appointment request for " + start_date + " and will contact you soon. <br> Meanwhile, please add the event to your calendar.")
 
     appointment = create_event(start_date, end_date, given_name, email)
     encoded = base64.b64encode(appointment).decode()
@@ -151,9 +151,9 @@ def create_event(start_date, end_date, given_name, email):
     event['dtend'] = event['dtend'].to_ical()
 
     # Add event information
-    event.add('summary', f'Online meeting with {MY_NAME}')
+    event.add('summary', 'Online meeting with ' + MY_NAME)
     event.add('location', 'Online via zoom')
-    event.add('description', f'Online meeting with {MY_NAME} to discuss chatbot development.')
+    event.add('description', 'Online meeting with ' + MY_NAME + ' to discuss chatbot development.')
     event.add('priority', 5)
 
     # # Add organiser
