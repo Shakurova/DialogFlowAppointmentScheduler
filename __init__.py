@@ -60,7 +60,7 @@ def webhook():
         for text in res:
             messages.append({"text": {"text": [text]}})
     else:
-        messages = {"text": {"text": [res]}}
+        messages = [{"text": {"text": [res]}}]
 
     return make_response(jsonify({'fulfillmentMessages': messages}))
 
