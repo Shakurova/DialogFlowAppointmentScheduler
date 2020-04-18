@@ -55,7 +55,14 @@ def webhook():
     log.info('Intent: ', intent)
     log.info('Response: ', res)
 
-    return make_response(jsonify({'fulfillmentText': res}))
+    messages = []
+    if type(res) == list:
+        for text in res:
+            messages.append({"text": {"text": [text]}})
+    else:
+        messages = {"text": {"text": [text]}}
+
+    return make_response(jsonify({'fulfillmentMessages': messages}))
 
 
 def check_availablity(calendar, req):
