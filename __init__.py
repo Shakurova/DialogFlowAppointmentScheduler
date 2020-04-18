@@ -2,7 +2,7 @@ import json
 import os
 import base64
 
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, Response
 
 import icalendar
 from icalendar import vCalAddress, vText
@@ -62,7 +62,9 @@ def webhook():
     else:
         messages = {"text": {"text": [text]}}
 
-    return make_response(jsonify({'fulfillmentMessages': messages}))
+    js = {'fulfillmentMessages': messages}
+    return Response(json.dumps(js),  mimetype='application/json')
+    # return make_response(jsonify({'fulfillmentMessages': messages}))
 
 
 def check_availablity(calendar, req):
