@@ -62,7 +62,7 @@ def webhook():
     else:
         messages = {"text": {"text": [res]}}
 
-    return make_response(jsonify({'fulfillmentText': res}))
+    return make_response(jsonify({'fulfillmentMessages': messages}))
 
 
 def check_availablity(calendar, req):
