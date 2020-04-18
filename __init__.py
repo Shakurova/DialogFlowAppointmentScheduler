@@ -60,11 +60,9 @@ def webhook():
         for text in res:
             messages.append({"text": {"text": [text]}})
     else:
-        messages = {"text": {"text": [text]}}
+        messages = {"text": {"text": [res]}}
 
-    js = {'fulfillmentMessages': messages}
-    return Response(json.dumps(js),  mimetype='application/json')
-    # return make_response(jsonify({'fulfillmentMessages': messages}))
+    return make_response(jsonify({'fulfillmentText': res}))
 
 
 def check_availablity(calendar, req):
@@ -98,14 +96,14 @@ def send_email(calendar, req):
     message_request = Mail(
         from_email=MY_EMAIL,
         to_emails=MY_EMAIL,
-        subject="Appointment request from " + MY_NAME,
-        html_content="Hey, Lena!<br> " + given_name + " just sent an appointment request for " + start_date + ". <br>Please send an email of confirmation to " + email)
+        subject=f"Appointment request from {given_name}",
+        html_content=f'Hey, Lena!<br> {given_name} just sent an appointment request for {start_date}. <br>Please send an email of confirmation to {email}')
 
     message_confirmation = Mail(
         from_email=MY_EMAIL,
         to_emails=email,
-        subject="Appointment confirmation with " + MY_NAME,
-        html_content="Hey, " + given_name + "! <br> " + MY_NAME + " just received your appointment request for " + start_date + " and will contact you soon. <br> Meanwhile, please add the event to your calendar.")
+        subject=f"Appointment confirmation with {MY_NAME}",
+        html_content=f'Hey, {given_name}! <br> {MY_NAME} just received your appointment request for {start_date} and will contact you soon. <br> Meanwhile, please add the event to your calendar.')
 
     appointment = create_event(start_date, end_date, given_name, email)
     encoded = base64.b64encode(appointment).decode()
@@ -134,7 +132,7 @@ def send_email(calendar, req):
         print(response.body)
         print(response.headers)
 
-        return 'Thank you, ' + given_name + ' . I just sent you an email to' + email + '!'
+        return f'Thank you, {given_name}. I just sent you an email to {email}!'
 
     except Exception as e:
         print(e.message)
@@ -160,9 +158,9 @@ def create_event(start_date, end_date, given_name, email):
     event['dtend'] = event['dtend'].to_ical()
 
     # Add event information
-    event.add('summary', 'Online meeting with ' + MY_NAME)
+    event.add('summary', f'Online meeting with {MY_NAME}')
     event.add('location', 'Online via zoom')
-    event.add('description', 'Online meeting with ' + MY_NAME + ' to discuss chatbot development.')
+    event.add('description', f'Online meeting with {MY_NAME} to discuss chatbot development.')
     event.add('priority', 5)
 
     # # Add organiser
@@ -171,14 +169,14 @@ def create_event(start_date, end_date, given_name, email):
     # event.add('organizer', organizer, encode=0)
 
     # Add attendee
-    attendee = vCalAddress("MAILTO:" + MY_EMAIL)
+    attendee = vCalAddress(f"MAILTO:{MY_EMAIL}")
     attendee.params['cn'] = vText(MY_NAME)
     attendee.params['ROLE'] = vText('REQ-PARTICIPANT')
     attendee.params['RSVP'] = vText(str(bool(True)).upper())
     event.add('attendee', attendee, encode=0)
 
     # Add attendee
-    attendee = vCalAddress('MAILTO:' + email)
+    attendee = vCalAddress(f"MAILTO:{email}")
     attendee.params['cn'] = vText(given_name)
     attendee.params['ROLE'] = vText('REQ-PARTICIPANT')
     attendee.params['RSVP'] = vText(str(bool(True)).upper())

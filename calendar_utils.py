@@ -89,11 +89,12 @@ class GoogleCalendarClient:
             end_time = start_time + timedelta(hours=duration)
 
         if self.get_events(query=None, start_time_str=start_time_str, duration=1):
-            response.append("I'm sorry, there are no slots available for " + start_time_str + ". Would some other time work for you?")
+            response.append(f"I'm sorry, there are no slots available for {start_time_str}. Would some other time work for you?")
             return False, response
         else:
             response.append("Ok, let me see if we can fit you in.")
-            response.append(start_time_str + " is fine!")
+            response.append(f"{start_time_str} is fine!")
+            response.append("To confirm the meeting, I want to send you an email. What is your email address?")
             return True, response
 
     def create_event(self, start_time_str, summary, duration=1, description=None, location=None):
@@ -142,7 +143,7 @@ class GoogleCalendarClient:
         Delete event given ID.
         """
 
-        print("Deleting event with id: " + event_id)
+        print(f"Deleting event with id: {event_id}")
 
         return self.service.events().delete(calendarId=CALENDAR_ID, eventId=event_id, sendNotifications=True).execute()
 
