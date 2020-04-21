@@ -43,10 +43,10 @@ def webhook():
     # Initiate Google Calendar class
     calendar = GoogleCalendarClient()
 
-    if intent == 'Schedule Appointment':
+    if intent == 'Schedule Appointment' or intent == 'Welcome Intent - Yes - UserEntersDateTime':
         res = check_availablity(calendar, req)
 
-    elif intent == 'Schedule Appointment - Email - Name':
+    elif intent == 'Welcome Intent - Yes - UserEntersDateTime - Name - Email':
         res = send_email(calendar, req)
 
     else:

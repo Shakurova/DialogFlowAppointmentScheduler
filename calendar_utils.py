@@ -89,11 +89,13 @@ class GoogleCalendarClient:
             end_time = start_time + timedelta(hours=duration)
 
         if self.get_events(query=None, start_time_str=start_time_str, duration=1):
-            response.append(f"I'm sorry, there are no slots available for {start_time_str}. Would some other time work for you?")
+            response.append("Ok, let me see if I can fit you in...")
+            response.append(f"Seems that {start_time_str} is no longer available. Would some other time work for you?")
             return False, response
         else:
-            response.append("Ok, let me see if we can fit you in.")
+            response.append("Ok, let me see if I can fit you in...")
             response.append(f"{start_time_str} is fine!")
+            response.append("Awesome! Just need a few more details and we are good to go!")
             response.append("To confirm the meeting, I want to send you an email. What is your email address?")
             return True, response
 
